@@ -1,0 +1,50 @@
+name: AdvancedChat
+version: '${version}'
+main: com.saikonohack.advancedChat.main.AdvancedChat
+api-version: '1.20'
+commands:
+  m:
+    description: Send a private message
+    aliases: [w, tell, msg]
+  r:
+    description: reply private message
+    usage: /r <message>
+  global:
+    description: Toggle visibility of global chat
+  local:
+    description: Toggle visibility of local chat
+  chat:
+    description: Toggle visibility of all chat
+  bc:
+    description: Отправить объявление в чат (кулдаун 1 час)
+    aliases: [ broadcast ]
+    usage: /bc <сообщение>
+    permission: advancedchat.spy
+    permission-message: У вас нет прав на использование этой команды.
+  spy:
+    description: Toggle spying
+  geolocate:
+    description: Отслеживание координат игрока
+    usage: /geolocate <player>
+    permission: advancedchat.geolocate
+    permission-message: У вас нет прав на использование этой команды.
+  playerinfo:
+    description: Получить информацию об игроке
+    usage: /playerinfo <player>
+    permission: advancedchat.playerinfo
+    permission-message: У вас нет прав на использование этой команды.
+  chatsettings:
+    description: Управление настройками чата для всех игроков
+    usage: /chatsettings <global|local> <on|off>
+    permission: advancedchat.chatsettings
+    permission-message: У вас нет прав на использование этой команды.
+  clearchat:
+    description: Очищает чат, заполнив его пустыми строками
+    usage: /clearchat
+    permission: advancedchat.clearchat
+    permission-message: У вас нет прав на использование этой команды.
+  adminmenu:
+    description: Открыть меню администратора
+    usage: /adminmenu
+    permission: advancedchat.adminmenu
+    permission-message: У вас нет прав на использование этой команды.

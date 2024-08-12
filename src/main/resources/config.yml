@@ -1,0 +1,25 @@
+chat:
+  global_message_format: "<gold>● <yellow><sender><gold> >> <white><message>"
+  local_message_format: "<red>● <yellow><sender><red> >> <white><message>"
+  private_message_format: "<blue>[<sender> -> <recipient>] <white><message>"
+  no_one_heard_you: "<red>Тебя никто не услышал"
+  join_message: "<green>Добро пожаловать, <player>!"
+  quit_message: "<yellow><player> покинул сервер. Мы будем скучать!"
+  death_message_format: "<red><death_message> [<hover:show_text:'<gray>Нажми F для уважения'><click:suggest_command:'!f'><aqua>Press F</click></hover><red>]"
+
+settings:
+  local_chat_radius: 100
+
+geolocate:
+  interval: 5  # Интервал в секундах, по умолчанию 5 секунд
+
+broadcast:
+  format: "<gold>[Объявление от <player>]: <reset><message>"
+  cooldown: 3600 # Время в секундах (1 час)
+  cooldown_message: "<red>Команду можно использовать раз в час. Осталось: <time> минут."
+
+profile:
+  - "<gray>Время на сервере: <white>%statistic_time_played%"
+  - "<red>Убийства: <white>%statistic_player_kills%"
+  - "<dark_gray>Смерти: <white>%statistic_deaths%"
+  - "<green>Жизни: <white>%tenlives_lives%"
