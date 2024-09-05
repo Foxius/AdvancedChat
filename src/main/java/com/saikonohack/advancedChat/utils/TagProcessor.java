@@ -82,25 +82,29 @@ public class TagProcessor {
     private Component processItemTag(Player sender) {
         ItemStack item = sender.getInventory().getItemInMainHand(); // Получаем предмет в руке игрока
 
-        if (item == null || item.getType() == Material.AIR) {
+        if (item.getType() == Material.AIR) {
             // Если в руке ничего нет, заменяем тег на "Пусто"
             return Component.text("Пусто").color(NamedTextColor.GRAY);
         }
 
-        // Получаем название предмета и количество
-        ItemMeta itemMeta = item.getItemMeta();
-        String itemName = itemMeta != null && itemMeta.hasDisplayName()
-                ? itemMeta.getDisplayName()
-                : item.getType().toString();
+        // Создаем TranslatableComponent для локализованного имени предмета
+        Component itemName = Component.translatable(item.getType().translationKey());
 
+        // Получаем количество предметов
         int itemAmount = item.getAmount();
 
         // Создаем HoverEvent для отображения предмета при наведении
-        HoverEvent<ShowItem> hoverEvent = HoverEvent.showItem(ShowItem.showItem(Key.key(item.getType().getKey().toString()), itemAmount));
+        HoverEvent<ShowItem> hoverEvent = HoverEvent.showItem(
+                ShowItem.showItem(Key.key(item.getType().getKey().toString()), itemAmount)
+        );
 
         // Создаем компонент для отображения предмета с полными данными при наведении
-        return Component.text("[" + itemName + " x" + itemAmount + "]")
+        return Component.text()
+                .append(Component.text("["))
+                .append(itemName)
+                .append(Component.text(" x" + itemAmount + "]"))
                 .hoverEvent(hoverEvent)
-                .color(NamedTextColor.GOLD);
+                .color(NamedTextColor.GOLD)
+                .build();
     }
 }
