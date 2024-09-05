@@ -76,3 +76,32 @@ commands:
     usage: /unmute <player>
     permission: advancedchat.mute
     permission-message: У вас нет прав на использование этой команды.
+
+  permissions:
+    advancedchat.spy:
+      description: Allows player to use the spy command
+      default: op
+    advancedchat.geolocate:
+      description: Allows player to track another player's location
+      default: op
+    advancedchat.playerinfo:
+      description: Allows player to see information about other players
+      default: op
+    advancedchat.chatsettings:
+      description: Allows player to change chat settings for all players
+      default: op
+    advancedchat.clearchat:
+      description: Allows player to clear the chat
+      default: op
+    advancedchat.adminmenu:
+      description: Allows player to open admin menu
+      default: op
+    advancedchat.ban:
+      description: Allows player to ban other players
+      default: op
+    advancedchat.kick:
+      description: Allows player to kick other players
+      default: op
+    advancedchat.mute:
+      description: Allows player to mute and unmute other players
+      default: op
