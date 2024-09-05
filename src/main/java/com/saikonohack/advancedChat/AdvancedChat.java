@@ -45,9 +45,12 @@ public final class AdvancedChat extends JavaPlugin implements Listener {
     public void onEnable() {
         saveDefaultConfig();
         headDisplayManager = new PlayerHeadDisplayManager(this);
-        getServer().getPluginManager().getPermission("advancedchat.*").getChildren().forEach((command, value) -> {
-            Objects.requireNonNull(getCommand(command)).setTabCompleter(new MentionTabCompleter());
-        });
+        Objects.requireNonNull(getCommand("m")).setTabCompleter(new MentionTabCompleter());
+        Objects.requireNonNull(getCommand("r")).setTabCompleter(new MentionTabCompleter());
+        Objects.requireNonNull(getCommand("global")).setTabCompleter(new MentionTabCompleter());
+        Objects.requireNonNull(getCommand("local")).setTabCompleter(new MentionTabCompleter());
+        Objects.requireNonNull(getCommand("chat")).setTabCompleter(new MentionTabCompleter());
+        Objects.requireNonNull(getCommand("bc")).setTabCompleter(new MentionTabCompleter());
 
         chatSettingsManager = new ChatSettingsManager();
         chatManager = new ChatManager(this, chatSettingsManager);
