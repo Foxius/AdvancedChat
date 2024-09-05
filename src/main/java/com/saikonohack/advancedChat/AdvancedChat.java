@@ -46,13 +46,17 @@ public final class AdvancedChat extends JavaPlugin implements Listener {
         saveDefaultConfig();
         headDisplayManager = new PlayerHeadDisplayManager(this);
         getServer().getPluginManager().getPermission("advancedchat.*").getChildren().forEach((command, value) -> {
-            getCommand(command).setTabCompleter(new MentionTabCompleter());
+            Objects.requireNonNull(getCommand(command)).setTabCompleter(new MentionTabCompleter());
         });
 
         chatSettingsManager = new ChatSettingsManager();
         chatManager = new ChatManager(this, chatSettingsManager);
         spyCommand = new SpyCommand(this);
         adminGUI = new AdminGUI(this);
+        Objects.requireNonNull(getCommand("mute")).setExecutor(new MuteCommand(chatManager));
+        Objects.requireNonNull(getCommand("kick")).setExecutor(new KickCommand(this));
+        Objects.requireNonNull(getCommand("ban")).setExecutor(new BanCommand(this));
+
 
         String clientId = getConfig().getString("twitch.client_id");
         String clientSecret = getConfig().getString("twitch.client_secret");

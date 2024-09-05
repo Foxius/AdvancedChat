@@ -16,6 +16,11 @@ chat:
   twitch_account_linked: "<gray>[<dark_purple>ᴛᴡɪᴛᴄʜ<gray>] <green>Ваш Twitch аккаунт успешно привязан.</green>"
   twitch_account_not_linked: "<gray>[<dark_purple>ᴛᴡɪᴛᴄʜ<gray>] <red>Не удалось связать вашу учетную запись Twitch. Убедитесь, что проверочная фраза указана в описании вашего канала.</red>"
   twitch_stream_live: "<gray>[<dark_purple>ᴛᴡɪᴛᴄʜ<gray>] <green>Стример <red><username> <green>запустил стрим: <yellow><title>. <green>Смотрите по ссылке: <aqua><url></green>"
+  item_placeholder_format: "<gold>[<item_name> x<item_amount>]</gold>"
+  item_no_item_message: "<gray>У вас в руке ничего нет!</gray>"
+  mute_message: "<red>Вы не можете отправлять сообщения, вы находитесь в муте."
+  muted_notification: "<red>Игрок <player> был замьючен на <time>."
+  unmuted_notification: "<green>Игрок <player> был размьючен."
 
 settings:
   local_chat_radius: 100

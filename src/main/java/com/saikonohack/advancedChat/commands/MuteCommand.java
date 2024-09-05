@@ -1,61 +1,56 @@
 package com.saikonohack.advancedChat.commands;
 
+import com.saikonohack.advancedChat.chat.ChatManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class MuteCommand implements CommandExecutor {
 
-    private final Plugin plugin;
+    private final ChatManager chatManager;
 
-    public MuteCommand(Plugin plugin) {
-        this.plugin = plugin;
+    public MuteCommand(ChatManager chatManager) {
+        this.chatManager = chatManager;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("advancedchat.admin")) {
-            sender.sendMessage(Objects.requireNonNull(plugin.getConfig().getString("messages.no_permission")));
+            sender.sendMessage("You don't have permission to use this command.");
             return true;
         }
 
         if (args.length < 2) {
-            sender.sendMessage("Использование: /mute <player> <time><s/m/h/d>");
+            sender.sendMessage("Usage: /mute <player> <time><s/m/h/d>");
             return true;
         }
 
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            sender.sendMessage("Игрок не найден.");
+            sender.sendMessage("Player not found.");
             return true;
         }
 
-        long muteTime = parseTime(args[1]);
-        if (muteTime <= 0) {
-            sender.sendMessage("Ошибка времени.");
+        // Проверяем, пытаемся ли снять мут
+        if (args[1].equalsIgnoreCase("unmute")) {
+            chatManager.unmutePlayer(target);
+            sender.sendMessage("Player " + target.getName() + " has been unmuted.");
             return true;
         }
 
-        target.addAttachment(plugin, "advancedchat.muted", true, (int) muteTime);
+        // Парсинг времени
+        long muteDuration = parseTime(args[1]);
+        if (muteDuration <= 0) {
+            sender.sendMessage("Invalid time format.");
+            return true;
+        }
+
+        chatManager.mutePlayer(target, muteDuration);
         sender.sendMessage("Player " + target.getName() + " has been muted for " + args[1] + ".");
-        String muteMessage = plugin.getConfig().getString("messages.mute_message", "<red>Вы не можете писать сообщения, так как находитесь в муте.");
-        target.sendMessage(muteMessage);
-
-        // Убираем мут через заданное время
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                target.removeAttachment(target.addAttachment(plugin, "advancedchat.muted", true));
-            }
-        }.runTaskLater(plugin, muteTime);
-
         return true;
     }
 
@@ -65,13 +60,13 @@ public class MuteCommand implements CommandExecutor {
             long duration = Long.parseLong(time.substring(0, time.length() - 1));
             switch (timeUnit) {
                 case 's':
-                    return TimeUnit.SECONDS.toSeconds(duration) * 20;
+                    return TimeUnit.SECONDS.toMillis(duration);
                 case 'm':
-                    return TimeUnit.MINUTES.toSeconds(duration) * 20;
+                    return TimeUnit.MINUTES.toMillis(duration);
                 case 'h':
-                    return TimeUnit.HOURS.toSeconds(duration) * 20;
+                    return TimeUnit.HOURS.toMillis(duration);
                 case 'd':
-                    return TimeUnit.DAYS.toSeconds(duration) * 20;
+                    return TimeUnit.DAYS.toMillis(duration);
                 default:
                     return -1;
             }

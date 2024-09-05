@@ -7,8 +7,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class BanCommand implements CommandExecutor {
@@ -20,9 +23,9 @@ public class BanCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (!sender.hasPermission("advancedchat.admin")) {
-            sender.sendMessage(plugin.getConfig().getString("messages.no_permission"));
+            sender.sendMessage(Objects.requireNonNull(plugin.getConfig().getString("messages.no_permission")));
             return true;
         }
 
@@ -44,7 +47,7 @@ public class BanCommand implements CommandExecutor {
         }
 
         Date unbanDate = new Date(System.currentTimeMillis() + banTime * 50);
-        String reason = args.length > 2 ? String.join(" ", args, 2, args.length) : "Забанен администратором.";
+        String reason = args.length > 2 ? String.join(" ", Arrays.copyOfRange(args, 2, args.length)) : "Забанен администратором.";
         String banMessage = plugin.getConfig().getString("messages.ban_message", "<red>Игрок <player> был забанен на <time>. Причина: <reason>")
                 .replace("<player>", target.getName())
                 .replace("<time>", args[1])
@@ -60,18 +63,13 @@ public class BanCommand implements CommandExecutor {
         try {
             char timeUnit = time.charAt(time.length() - 1);
             long duration = Long.parseLong(time.substring(0, time.length() - 1));
-            switch (timeUnit) {
-                case 's':
-                    return TimeUnit.SECONDS.toMillis(duration);
-                case 'm':
-                    return TimeUnit.MINUTES.toMillis(duration);
-                case 'h':
-                    return TimeUnit.HOURS.toMillis(duration);
-                case 'd':
-                    return TimeUnit.DAYS.toMillis(duration);
-                default:
-                    return -1;
-            }
+            return switch (timeUnit) {
+                case 's' -> TimeUnit.SECONDS.toMillis(duration);
+                case 'm' -> TimeUnit.MINUTES.toMillis(duration);
+                case 'h' -> TimeUnit.HOURS.toMillis(duration);
+                case 'd' -> TimeUnit.DAYS.toMillis(duration);
+                default -> -1;
+            };
         } catch (NumberFormatException e) {
             return -1;
         }
