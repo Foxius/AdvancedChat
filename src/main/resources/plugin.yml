@@ -53,3 +53,26 @@ commands:
     usage: /adminmenu
     permission: advancedchat.adminmenu
     permission-message: У вас нет прав на использование этой команды.
+  ban:
+    description: Забанить игрока с указанием причины
+    usage: /ban <player> <time><s/m/h/d> <reason>
+    permission: advancedchat.ban
+    permission-message: У вас нет прав на использование этой команды.
+
+  kick:
+    description: Кикнуть игрока с сервера
+    usage: /kick <player> <reason>
+    permission: advancedchat.kick
+    permission-message: У вас нет прав на использование этой команды.
+
+  mute:
+    description: Замьютить игрока на определенное время
+    usage: /mute <player> <time><s/m/h/d> <reason>
+    permission: advancedchat.mute
+    permission-message: У вас нет прав на использование этой команды.
+
+  unmute:
+    description: Размьютить игрока
+    usage: /unmute <player>
+    permission: advancedchat.mute
+    permission-message: У вас нет прав на использование этой команды.
