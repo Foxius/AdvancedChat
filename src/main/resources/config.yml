@@ -1,25 +1,37 @@
 chat:
-  global_message_format: "<gold>● <yellow><sender><gold> >> <white><message>"
-  local_message_format: "<red>● <yellow><sender><red> >> <white><message>"
-  private_message_format: "<blue>[<sender> -> <recipient>] <white><message>"
-  no_one_heard_you: "<red>Тебя никто не услышал"
-  join_message: "<green>Добро пожаловать, <player>!"
-  quit_message: "<yellow><player> покинул сервер. Мы будем скучать!"
-  death_message_format: "<red><death_message> [<hover:show_text:'<gray>Нажми F для уважения'><click:suggest_command:'!f'><aqua>Press F</click></hover><red>]"
+  global_message_format: "%javascript_location%<sender><gold> >> <white><message>"
+  local_message_format: "%javascript_location%<sender><red>: <white><message>"
+  private_message_format: "<blue>[<sender> <blue>-> <recipient><blue>] <white><message>"
+  no_one_heard_you: "<red>!? Тебя никто не услышал"
+  join_message: "<green>→ <dark_purple><player> <red>[<hover:show_text:'<gray>Поприветствуем игрока!'><click:suggest_command:'!qq'><aqua>qq</click></hover><red>]"
+  quit_message: "<red>← <dark_purple><player>"
+  death_message_format: "<blue>🪦 <red><death_message> [<hover:show_text:'<gray>Нажми F для уважения'><click:suggest_command:'!F'><aqua>Press F</click></hover><red>]"
+  player_format: "<click:suggest_command:'/m <player_name>'><hover:show_text:'<gray>Время на сервере: <white>%statistic_time_played%\n<red>Убийства: <white>%statistic_player_kills%\n<dark_gray>Смерти: <white>%statistic_deaths%\n'><dark_purple><player_name></hover></click>"
+  twitch_integration_disabled: "<yellow>Twitch integration is disabled due to missing or invalid configuration.</yellow>"
+  twitch_integration_enabled: "<green>Twitch integration is enabled successfully.</green>"
+  twitch_account_link_instructions: <gray>[<dark_purple>Twitch<gray>] 
+    <green>Для привязки аккаунта Twitch, добавьте следующую фразу в описание вашего канала:</green>
+    <click:suggest_command:'<phrase>'><yellow><phrase></yellow></click:suggest_command>
+    <green>Затем используйте команду /verifytwitch для завершения привязки.</green>
+  twitch_account_linked: "<gray>[<dark_purple>ᴛᴡɪᴛᴄʜ<gray>] <green>Ваш Twitch аккаунт успешно привязан.</green>"
+  twitch_account_not_linked: "<gray>[<dark_purple>ᴛᴡɪᴛᴄʜ<gray>] <red>Не удалось связать вашу учетную запись Twitch. Убедитесь, что проверочная фраза указана в описании вашего канала.</red>"
+  twitch_stream_live: "<gray>[<dark_purple>ᴛᴡɪᴛᴄʜ<gray>] <green>Стример <red><username> <green>запустил стрим: <yellow><title>. <green>Смотрите по ссылке: <aqua><url></green>"
 
 settings:
   local_chat_radius: 100
 
 geolocate:
-  interval: 5  # Интервал в секундах, по умолчанию 5 секунд
+  interval: 5
 
 broadcast:
-  format: "<gold>[Объявление от <player>]: <reset><message>"
-  cooldown: 3600 # Время в секундах (1 час)
+  format: "<gold>[📢 Сообщение для всех игроков от <blue><player>]: <reset><message>"
+  cooldown: 3600
   cooldown_message: "<red>Команду можно использовать раз в час. Осталось: <time> минут."
 
-profile:
-  - "<gray>Время на сервере: <white>%statistic_time_played%"
-  - "<red>Убийства: <white>%statistic_player_kills%"
-  - "<dark_gray>Смерти: <white>%statistic_deaths%"
-  - "<green>Жизни: <white>%tenlives_lives%"
+twitch:
+  client_id: "-"
+  client_secret: "-"
+
+ignored_advancement:
+  - "advancements.other_example"
+

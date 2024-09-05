@@ -1,10 +1,11 @@
 package com.saikonohack.advancedChat.commands;
 
-import com.saikonohack.advancedChat.main.AdvancedChat;
-import com.saikonohack.advancedChat.utils.PlayerProfile;
+import com.saikonohack.advancedChat.AdvancedChat;
+import com.saikonohack.advancedChat.utils.TagProcessor;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -21,19 +22,19 @@ public class MessageCommand implements CommandExecutor {
 
     private final Map<Player, Player> lastMessaged = new HashMap<>();
     private final AdvancedChat plugin;
+    private final TagProcessor tagProcessor;
 
     public MessageCommand(AdvancedChat plugin) {
         this.plugin = plugin;
+        this.tagProcessor = new TagProcessor();
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player playerSender)) {
             sender.sendMessage(ChatColor.RED + "Только игроки могут использовать эту команду.");
             return true;
         }
-
-        Player playerSender = (Player) sender;
 
         if (label.equalsIgnoreCase("m") || label.equalsIgnoreCase("w") || label.equalsIgnoreCase("tell") || label.equalsIgnoreCase("msg")) {
             if (args.length < 2) {
@@ -54,6 +55,11 @@ public class MessageCommand implements CommandExecutor {
 
             target.sendMessage(formattedMessage);
             playerSender.sendMessage(formattedMessage);
+            for (Player spy : Bukkit.getOnlinePlayers()) {
+                if (plugin.getSpyCommand().isSpying(spy.getUniqueId()) && !spy.equals(sender) && !spy.equals(target)) {
+                    spy.sendMessage(Component.text("[SPY] ", NamedTextColor.GRAY).append(formattedMessage));
+                }
+            }
 
             lastMessaged.put(target, playerSender);
             lastMessaged.put(playerSender, target);
@@ -84,34 +90,35 @@ public class MessageCommand implements CommandExecutor {
     }
 
     private Component formatPrivateMessage(Player sender, Player recipient, String message) {
-        PlayerProfile senderProfile = new PlayerProfile(sender, plugin);
-        PlayerProfile recipientProfile = new PlayerProfile(recipient, plugin);
+        String format = plugin.getConfig().getString("chat.private_message_format", "<dark_aqua><sender> <gray>> <green><recipient><white>: <message>");
+        format = PlaceholderAPI.setPlaceholders(sender, format);
 
-        String format = plugin.getConfig().getString("chat.private_message_format", "&9<sender> &8>> &a<recipient>&f: &f<message>");
+        Component senderComponent = getFormattedPlayerName(sender);
+        Component recipientComponent = getFormattedPlayerName(recipient);
 
-        Component senderComponent = senderProfile.getPlayerNameComponent();
-        Component recipientComponent = recipientProfile.getPlayerNameComponent();
+        Component processedMessageComponent = tagProcessor.processTags(sender, message);
 
-        // Преобразуем строку формата в компонент с учетом цветов
-        String formattedMessage = ChatColor.translateAlternateColorCodes('&', format)
-                .replace("<message>", message);
+        return formatMessage(senderComponent, recipientComponent, format, processedMessageComponent);
+    }
 
-        // Преобразуем строку формата в Component, затем заменяем плейсхолдеры
-        return LegacyComponentSerializer.legacySection().deserialize(formattedMessage)
-                .replaceText(builder -> builder.matchLiteral("<sender>").replacement(senderComponent))
-                .replaceText(builder -> builder.matchLiteral("<recipient>").replacement(recipientComponent));
+    private Component formatMessage(Component senderComponent, Component recipientComponent, String format, Component messageComponent) {
+        String messageText = MiniMessage.miniMessage().serialize(messageComponent);
+
+        format = format.replace("<sender>", MiniMessage.miniMessage().serialize(senderComponent))
+                       .replace("<recipient>", MiniMessage.miniMessage().serialize(recipientComponent))
+                       .replace("<message>", messageText);
+
+        return MiniMessage.miniMessage().deserialize(format);
     }
 
 
-    private Component formatMessage(Component senderComponent, Component recipientComponent, String message, String format) {
-        String senderName = PlainTextComponentSerializer.plainText().serialize(senderComponent);
-        String recipientName = PlainTextComponentSerializer.plainText().serialize(recipientComponent);
+    private Component getFormattedPlayerName(Player player) {
+        String playerFormat = plugin.getConfig().getString("chat.player_format", "<yellow><player_name>");
 
-        String formatted = format
-            .replace("<sender>", senderName)
-            .replace("<recipient>", recipientName)
-            .replace("<message>", message);
+        playerFormat = playerFormat.replace("<player_name>", player.getName());
+        playerFormat = PlaceholderAPI.setPlaceholders(player, playerFormat);
 
-        return Component.text(ChatColor.translateAlternateColorCodes('&', formatted));
+        return MiniMessage.miniMessage().deserialize(playerFormat);
     }
+
 }

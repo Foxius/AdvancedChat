@@ -1,6 +1,6 @@
 package com.saikonohack.advancedChat.commands;
 
-import com.saikonohack.advancedChat.main.AdvancedChat;
+import com.saikonohack.advancedChat.AdvancedChat;
 import com.saikonohack.advancedChat.settings.ChatSettings;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

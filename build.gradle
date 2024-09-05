@@ -1,9 +1,10 @@
 plugins {
     id 'java'
+    id("io.github.goooler.shadow") version "8.1.8"
 }
 
 group = 'com.saikonohack'
-version = '1.12-SNAPSHOT'
+version = '1.16-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -19,12 +20,26 @@ repositories {
         name = "placeholderapi-repo"
         url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
     }
+    maven {
+        name = "DiscordSRV"
+        url = 'https://nexus.scarsz.me/content/groups/public/'
+    }
+    maven {
+        name = "codemc-repo"
+        url = "https://repo.codemc.io/repository/maven-public/"
+    }
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly "io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT"
+    compileOnly "io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT"
     compileOnly 'me.clip:placeholderapi:2.10.9'
+    compileOnly 'com.discordsrv:discordsrv:1.28.0'
+    compileOnly("net.skinsrestorer:skinsrestorer-api:15.4.1-SNAPSHOT")
+
+    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
 }
 
 def targetJavaVersion = 21
@@ -52,4 +67,13 @@ processResources {
     filesMatching('plugin.yml') {
         expand props
     }
+}
+
+tasks.named('build').configure {
+    dependsOn 'shadowJar'
+}
+
+shadowJar {
+    relocate 'okhttp3', 'com.saikonohack.advancedChat.shaded.okhttp3'
+    relocate 'com.google.gson', 'com.saikonohack.advancedChat.shaded.gson'
 }

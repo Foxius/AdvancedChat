@@ -1,6 +1,6 @@
 package com.saikonohack.advancedChat.commands;
 
-import com.saikonohack.advancedChat.main.AdvancedChat;
+import com.saikonohack.advancedChat.AdvancedChat;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

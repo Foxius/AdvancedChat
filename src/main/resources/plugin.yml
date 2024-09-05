@@ -1,6 +1,7 @@
 name: AdvancedChat
 version: '${version}'
-main: com.saikonohack.advancedChat.main.AdvancedChat
+main: com.saikonohack.advancedChat.AdvancedChat
+softdepend: [SkinsRestorer]
 api-version: '1.20'
 commands:
   m:
@@ -19,10 +20,14 @@ commands:
     description: Отправить объявление в чат (кулдаун 1 час)
     aliases: [ broadcast ]
     usage: /bc <сообщение>
+  linktwitch:
+    description: Привязать твитч
+  verifytwitch:
+    description: Подвердить привязку твича
+
+  spy:
     permission: advancedchat.spy
     permission-message: У вас нет прав на использование этой команды.
-  spy:
-    description: Toggle spying
   geolocate:
     description: Отслеживание координат игрока
     usage: /geolocate <player>
