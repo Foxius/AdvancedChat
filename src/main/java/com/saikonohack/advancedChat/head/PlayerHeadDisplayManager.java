@@ -33,7 +33,7 @@ public class PlayerHeadDisplayManager {
             URL skinUrl = getPlayerSkinUrl(player);
 
             if (skinUrl != null) {
-                PlayerHeadRenderer headRenderer = new PlayerHeadRenderer(skinUrl);
+                PlayerHeadRenderer headRenderer = new PlayerHeadRenderer(skinUrl, player.getName());
                 Component headComponent = headRenderer.getHeadAsciiArtComponent();
 
                 plugin.getServer().getScheduler().runTask(plugin, () -> {
@@ -42,7 +42,7 @@ public class PlayerHeadDisplayManager {
             } else {
                 try {
                     URL defaultSkinUrl = new URL("https://mineskin.eu/download/" + player.getName());
-                    PlayerHeadRenderer headRenderer = new PlayerHeadRenderer(defaultSkinUrl);
+                    PlayerHeadRenderer headRenderer = new PlayerHeadRenderer(defaultSkinUrl, player.getName());
                     Component headComponent = headRenderer.getHeadAsciiArtComponent();
 
                     plugin.getServer().getScheduler().runTask(plugin, () -> {
