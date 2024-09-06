@@ -1,7 +1,9 @@
 name: AdvancedChat
 version: '${version}'
 main: com.saikonohack.advancedChat.AdvancedChat
-softdepend: [SkinsRestorer]
+depend: [ "SkinsRestorer" ]
+
+
 api-version: '1.20'
 commands:
   m:

@@ -1,4 +1,4 @@
-package com.saikonohack.test;
+package com.saikonohack.advancedChat.head;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;

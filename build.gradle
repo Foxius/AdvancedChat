@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'com.saikonohack'
-version = '1.16-SNAPSHOT'
+version = '1.17-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -32,6 +32,7 @@ repositories {
 
 dependencies {
     compileOnly "io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT"
+    compileOnly "io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT"
     compileOnly "io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT"
     compileOnly 'me.clip:placeholderapi:2.10.9'
     compileOnly 'com.discordsrv:discordsrv:1.28.0'

@@ -11,7 +11,6 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
 import java.net.URL;
 import java.util.Base64;
 import java.util.Optional;
@@ -26,28 +25,33 @@ public class PlayerHeadDisplayManager {
     public PlayerHeadDisplayManager(Plugin plugin) {
         this.plugin = plugin;
         this.skinsRestorer = SkinsRestorerProvider.get();
-        if (skinsRestorer != null) {
-            LOGGER.info("SkinsRestorer API successfully loaded.");
-        } else {
-            LOGGER.severe("SkinsRestorer API not found.");
-        }
     }
 
     public void handlePlayerJoin(Player player) {
+
         plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
             URL skinUrl = getPlayerSkinUrl(player);
 
             if (skinUrl != null) {
-                com.saikonohack.test.PlayerHeadRenderer headRenderer = new com.saikonohack.test.PlayerHeadRenderer(skinUrl);
-                player.sendMessage(headRenderer.getHeadAsciiArtComponent());
+                PlayerHeadRenderer headRenderer = new PlayerHeadRenderer(skinUrl);
+                Component headComponent = headRenderer.getHeadAsciiArtComponent();
+
+                plugin.getServer().getScheduler().runTask(plugin, () -> {
+                    player.sendMessage(headComponent);
+                });
             } else {
-                // Если скин не найден, используем URL для базового скина
                 try {
-                    URL defaultSkinUrl = new URL("https://textures.minecraft.net/texture/8f8cd7b1b2b1d8fe435781d768113f531d50b3135cc9b7d0d2d19d14dd4e1e78"); // Пример URL базового скина
-                    com.saikonohack.test.PlayerHeadRenderer headRenderer = new com.saikonohack.test.PlayerHeadRenderer(defaultSkinUrl);
-                    player.sendMessage(headRenderer.getHeadAsciiArtComponent());
+                    URL defaultSkinUrl = new URL("https://mineskin.eu/download/" + player.getName());
+                    PlayerHeadRenderer headRenderer = new PlayerHeadRenderer(defaultSkinUrl);
+                    Component headComponent = headRenderer.getHeadAsciiArtComponent();
+
+                    plugin.getServer().getScheduler().runTask(plugin, () -> {
+                        player.sendMessage(headComponent);
+                    });
                 } catch (Exception e) {
-                    player.sendMessage(Component.text("Could not retrieve your skin.").color(NamedTextColor.RED));
+                    plugin.getServer().getScheduler().runTask(plugin, () -> {
+                        player.sendMessage(Component.text("Could not retrieve your skin.").color(NamedTextColor.RED));
+                    });
                 }
             }
         });
@@ -69,10 +73,8 @@ public class PlayerHeadDisplayManager {
                 JSONObject skinObject = (JSONObject) texturesObject.get("SKIN");
                 String textureUrl = (String) skinObject.get("url");
 
-                LOGGER.info("Successfully retrieved skin URL for player: " + player.getName());
                 return new URL(textureUrl);
             } else {
-                LOGGER.warning("No skin found for player: " + player.getName());
                 return null;
             }
         } catch (Exception e) {
@@ -80,4 +82,5 @@ public class PlayerHeadDisplayManager {
             return null;
         }
     }
+
 }

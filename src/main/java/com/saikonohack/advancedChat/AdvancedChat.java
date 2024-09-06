@@ -14,7 +14,6 @@ import com.saikonohack.advancedChat.twitch.TwitchStreamChecker;
 import com.saikonohack.advancedChat.twitch.TwitchVerificationManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -44,7 +43,14 @@ public final class AdvancedChat extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        headDisplayManager = new PlayerHeadDisplayManager(this);
+        getServer().getPluginManager().registerEvents(this, this);
+        if (getServer().getPluginManager().getPlugin("SkinsRestorer") != null) {
+            getServer().getScheduler().runTaskLater(this, () -> {
+                headDisplayManager = new PlayerHeadDisplayManager(this);
+            }, 60L); // Delays by 1 second (20 ticks)
+        } else {
+            getLogger().warning("SkinsRestorer не найден. Некоторые функции будут отключены.");
+        }
         Objects.requireNonNull(getCommand("m")).setTabCompleter(new MentionTabCompleter());
         Objects.requireNonNull(getCommand("r")).setTabCompleter(new MentionTabCompleter());
         Objects.requireNonNull(getCommand("global")).setTabCompleter(new MentionTabCompleter());
@@ -78,6 +84,7 @@ public final class AdvancedChat extends JavaPlugin implements Listener {
         } else {
             sendConsoleMessage(getConfig().getString("chat.twitch_integration_disabled"));
         }
+
 
         getServer().getPluginManager().registerEvents(this.getAdminGUI(), this);
         getServer().getPluginManager().registerEvents(new ChatListener(chatManager), this);
